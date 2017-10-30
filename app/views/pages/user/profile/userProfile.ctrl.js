@@ -8,7 +8,7 @@ angular
     .controller('userProfileCtrl', userProfileCtrl);
 
 /** @ngInject */
-function userProfileCtrl($cookies, User, BUILD_VERSION, LOCALE, regexPatterns, $http, toastService) {
+function userProfileCtrl($cookies, User, BUILD_VERSION, LOCALE, regexPatterns, $http, toastService,    $mdConstant) {
     var vm = this;
     vm.disableEditing = false;
     vm.emailPattern = regexPatterns.email;
@@ -118,6 +118,91 @@ function userProfileCtrl($cookies, User, BUILD_VERSION, LOCALE, regexPatterns, $
             vm.passwordFormInvalid = true;
         }
     };
+
+    ///TEST
+    vm.labels3 = ["Offline", "Online & Stable", "Online but unstable"];
+    vm.data3 = [1, 7, 2];
+
+    vm.labels2 = ['2008', '2009', '2010', '2011', '2012', '2013', '2014', '2015', '2016', '2017'];
+    vm.series2 = ['published datasets'];
+
+    vm.data2 = [
+        [7, 5, 1, 3, 0, 0, 1, 0, 0]
+    ];
+
+    vm.colors0 = ['#ff6347', '#61a861', '#ffc247'];
+    vm.colors2 = {
+        fillColor: 'rgba(151,187,205,0.2)',
+        strokeColor: 'rgba(151,187,205,1)',
+        pointColor: 'rgba(151,187,205,1)',
+        pointStrokeColor: '#fff',
+        pointHighlightFill: '#fff',
+        pointHighlightStroke: 'rgba(151,187,205,0.8)'
+    };
+    vm.colors1 = [
+        {
+            backgroundColor: '#A2DED0',
+            borderColor: '#A2DED0',
+            hoverBackgroundColor: '#A2DED0',
+            hoverBorderColor: '#A2DED0'
+        },
+        {
+            backgroundColor: '#65C6BB',
+            borderColor: '#65C6BB',
+            hoverBackgroundColor: '#65C6BB',
+            hoverBorderColor: '#65C6BB'
+        },
+        {
+            backgroundColor: '#1BBC9B',
+            borderColor: '#1BBC9B',
+            hoverBackgroundColor: '#1BBC9B',
+            hoverBorderColor: '#1BBC9B'
+        }
+    ];
+    vm.datasetOverride = [
+        {
+            borderWidth:0
+        }];
+    vm.options2 = {
+        responsive: true,
+        maintainAspectRatio: false,
+        scaleGridLineWidth: 1,
+        scaleFontSize: 10,
+        scaleShowHorizontalLines: false,
+        scaleShowVerticalLines: false,
+        scaleBeginAtZero: true,
+        borderWidth: 0,
+        tooltips: {
+            yAlign: 'bottom'
+        },
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero:true
+                },
+                gridLines: {
+                    display: false
+                }
+            }],
+            xAxes: [{
+                ticks: {
+                    beginAtZero:true
+                },
+                gridLines: {
+                    display: false
+                }
+            }]
+        }
+    };
+
+    vm.options3 = {
+        responsive: true,
+        maintainAspectRatio: false
+    };
+
+    vm.keys = [$mdConstant.KEY_CODE.ENTER, $mdConstant.KEY_CODE.COMMA];
+    vm.recorderNames = ['mhofft','morten høfft', 'mortenhofft', 'mhoefft'];
+    //TEST END
 }
 
 module.exports = userProfileCtrl;
