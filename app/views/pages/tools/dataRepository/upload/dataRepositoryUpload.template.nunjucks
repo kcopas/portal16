@@ -7,7 +7,8 @@
             We also need auth. If the role for this is already exposed in the registry, then just exposing that for the interface. The repo api should validate the json token for validity. We need of course to use the same secret
         </p>
         <div>
-            {% include "./form.nunjucks" %}
+            {% include "./testForm.nunjucks" %}
+            {#{% include "./form.nunjucks" %}#}
         </div>
     </div>
     <div class="container--narrow" ng-if="eoi.state.submissionComplete">
