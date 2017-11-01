@@ -1,5 +1,6 @@
 'use strict';
 let credentials = rootRequire('config/credentials').directory,
+    topDomain = rootRequire('config/config').topDomain,
     secret = credentials.secret,
     jwt = require('jsonwebtoken'),
     expressJwt = require('express-jwt'),
@@ -148,26 +149,24 @@ function logUserIn(res, user){
  * Sets the token as a secure cookie
  */
 function setTokenCookie(res, token) {
-    res.cookie('token', token,
-        {
-            maxAge: day * 7,
-            secure: isNotDevBuild,
-            httpOnly: true
-        }
-    );
+    var options = {
+        maxAge: day * 7,
+        secure: isNotDevBuild,
+        httpOnly: true
+    };
+    res.cookie('token', token, options);
 }
 
 /**
  * Remove token cookie
  */
 function removeTokenCookie(res) {
-    res.cookie('token', '',
-        {
-            maxAge: 1,
-            secure: isNotDevBuild,
-            httpOnly: true
-        }
-    );
+    var options = {
+        maxAge: 1,
+        secure: isNotDevBuild,
+        httpOnly: true
+    };
+    res.cookie('token', '', options);
 }
 
 /**
