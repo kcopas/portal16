@@ -5,10 +5,13 @@ angular
     .controller('dataRepositoryUploadCtrl', dataRepositoryUploadCtrl);
 
 /** @ngInject */
-function dataRepositoryUploadCtrl(Upload, $timeout) {
+function dataRepositoryUploadCtrl($http, Upload, $timeout, $cookies) {
     var vm = this;
     vm.test = 'upload test';
     vm.username = 'test';
+
+    console.log($cookies.get('token'));
+    $http.get('http://api.gbif-dev.org/v1/data_packages').then(function(data){console.log(data)}).catch(function(err){console.log(err)});
     vm.uploadPic = function(file) {
         console.log('upload file');
         //console.log(vm.picFile);
@@ -20,14 +23,16 @@ function dataRepositoryUploadCtrl(Upload, $timeout) {
         var files = vm.allfiles;
         var metadata = blobFile;
         var fileUrl = ['http://aaa.aa', 'http://bbb.bb'];
-        var fileUrl = undefined;
+        fileUrl = undefined;
         var data_package = {
             title: 'Test title',
             description: 'test description'
         };
+
         vm.testUpload = Upload.upload({
             //url: 'http://localhost:3002/upload',
             url: 'http://api.gbif-dev.org/v1/data_packages/',
+            headers: {'Authorization': 'Bearer ' + $cookies.get('token')}, // only for html5
             data: {data_package: JSON.stringify(data_package), file: files, metadata: metadata, fileUrl: fileUrl}
         });
 

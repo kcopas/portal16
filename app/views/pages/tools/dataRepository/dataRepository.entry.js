@@ -3,19 +3,40 @@
 require('./upload/dataRepositoryUpload.ctrl');
 require('./about/dataRepositoryAbout.ctrl');
 require('./upload/key/dataRepositoryKey.ctrl');
+require('./dataPackage.resource');
+
+var _ = require('lodash');
 
 angular
     .module('portal')
     .controller('dataRepositoryCtrl', dataRepositoryCtrl);
 
 /** @ngInject */
-function dataRepositoryCtrl($state) {
+function dataRepositoryCtrl($state, DataPackageSearch, User, $sessionStorage) {
     var vm = this;
     vm.$state = $state;
     vm.uploads = {
         count: 1,
         limit: 20,
         results: testData
+    };
+
+    //get user from storage - if the user session has expired the backend will fail
+    function updateUser() {
+        vm.username = _.get($sessionStorage.user, 'username');
+    }
+    updateUser();
+
+    vm.search = function() {
+        var apiQuery = {q: vm.q};
+        if (vm.myUploads && vm.username) {
+            apiQuery.user = vm.username;
+        }
+        vm.uploads = DataPackageSearch.query(apiQuery, function (res) {
+            console.log(res);
+        }, function (err) {
+            console.log(err);
+        });
     };
 }
 

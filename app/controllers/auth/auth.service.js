@@ -152,7 +152,7 @@ function setTokenCookie(res, token) {
     var options = {
         maxAge: day * 7,
         secure: isNotDevBuild,
-        httpOnly: true
+        httpOnly: false
     };
     res.cookie('token', token, options);
 }
@@ -164,7 +164,7 @@ function removeTokenCookie(res) {
     var options = {
         maxAge: 1,
         secure: isNotDevBuild,
-        httpOnly: true
+        httpOnly: false
     };
     res.cookie('token', '', options);
 }

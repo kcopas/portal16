@@ -56,7 +56,7 @@ var config = {
         serverProtocol: 'http:',
         apidocs: apidocs,
         dataApiV2: dataApiV2 || '//api.gbif.org/v2/',
-        dataApi: dataApi || '//api.gbif.org/v1/',
+        dataApi: dataApi || '//api.gbif-dev.org/v1/',
         tileApi: tileApi || '//api.gbif.org/v1/map/density/tile.png',
         identityApi: identityApi || '//api.gbif-dev.org/v1/',
         crawlerApi: crawlerApi || '//crawler.gbif.org/',
