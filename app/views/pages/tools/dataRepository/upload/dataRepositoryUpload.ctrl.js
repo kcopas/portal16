@@ -33,7 +33,8 @@ function dataRepositoryUploadCtrl($http, Upload, $timeout, $cookies) {
             //url: 'http://localhost:3002/upload',
             url: 'http://api.gbif-dev.org/v1/data_packages/',
             headers: {'Authorization': 'Bearer ' + $cookies.get('token')}, // only for html5
-            data: {data_package: JSON.stringify(data_package), file: files, metadata: metadata, fileUrl: fileUrl}
+            data: {data_package: JSON.stringify(data_package), file: files, metadata: metadata, fileUrl: fileUrl},
+            arrayKey: ''
         });
 
         vm.testUpload.then(function (response) {
