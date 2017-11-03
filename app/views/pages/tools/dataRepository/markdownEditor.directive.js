@@ -11,7 +11,7 @@ angular
             restrict: 'A',
             link: function (scope, element, attrs) {
                 console.log('markdownEditor link');
-                var simplemde = new SimpleMDE({ element: element[0] });
+                var simplemde = new SimpleMDE({ element: element[0], forceSync: true });
             }
         };
     });

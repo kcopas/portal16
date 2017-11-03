@@ -1,56 +1,110 @@
-<form name="eoi.publisherForm"
-      ng-submit="eoi.publisherForm.$valid && eoi.createOrganization()">
-    <div>
-        <md-card>
-            <md-card-title>
-                <md-card-title-text>
-                    <span class="md-headline">New upload</span>
-                    <span class="md-subhead">Good meta data is essential for .... lorem ipsum something goes here that others know how to write</span>
-                </md-card-title-text>
-            </md-card-title>
+<form name="dataRepositoryUpload.uploadForm"
+      ng-submit="dataRepositoryUpload.uploadForm.$valid">
 
-            <md-card-content>
-                <div layout="row">
-                    <md-input-container flex="100">
-                        <md-button id="uploadButton" class="md-raised md-primary"> Choose Files </md-button>
-                    </md-input-container>
-                    <md-input-container flex="100">
-                        <label>Upload from url - useful for large files</label>
-                        <input name="contactFirstName" ng-model="eoi.form.pointOfContact.firstName">
-                    </md-input-container>
+    <h4 class="card-header">Files</h4>
+    <div class="card">
+        <div class="card__stripe">
+            <div class="card__content" ng-if="!dataRepositoryUpload.allfiles.length">
+                <div>
+                    <div ngf-drop
+                         ngf-select
+                         name="allfiles"
+                         ng-model="dataRepositoryUpload.allfiles"
+                         type="file"
+                         required
+                         ngf-model-options="{updateOn: 'change click drop dropUrl paste', allowInvalid: false, debounce: 0}"
+                         ngf-change="dataRepositoryUpload.test()"
+                         ngf-multiple="true"
+                         multiple=""
+                         class="drop-box dropArea">Drop or select</div>
                 </div>
-
-                <div layout="row">
-                    <md-input-container flex="100">
-                        <label>Title</label>
-                        <input required name="contactFirstName" ng-model="eoi.form.pointOfContact.firstName">
-                        <div ng-messages="eoi.publisherForm.contactFirstName.$error">
-                            <div ng-message="required">This is required.</div>
-                        </div>
-                    </md-input-container>
-                </div>
-                <div layout="row">
-                    <md-input-container flex="100">
-                        <label>Description</label>
-                        <textarea required ng-model="eoi.form.description" rows="5" md-select-on-focus name="organizationDescription"></textarea>
-                        <div class="hint discreet--very small">Briefly describe the your upload - to that others will know ...</div>
-                    </md-input-container>
-                </div>
-                <div layout="row">
-                    <md-input-container flex="50">
-                        <label>License</label>
-                        <md-select ng-model="ctrl.userState">
-                            <md-option><em>CC 0</em></md-option>
-                            <md-option><em>CC attribution</em></md-option>
-                            <md-option><em>CC none comercial</em></md-option>
-                            <md-option><em>Etc</em></md-option>
-                        </md-select>
-                    </md-input-container>
-                </div>
-                <div layout="row" layout-align="end" flex>
-                    <md-button type="submit" class="md-raised md-primary" ng-click="eoi.submitAttempted = true">Upload archive</md-button>
-                </div>
-            </md-card-content>
-        </md-card>
+            </div>
+            <div class="fileList" ng-repeat="file in dataRepositoryUpload.allfiles">
+                <span><a href="" class="gb-icon-trash inherit noUnderline" ng-click="dataRepositoryUpload.removeFromArray(file, dataRepositoryUpload.allfiles)"></a></span>
+                <span>{{ file.name }}</span>
+                <span class="discreet--very">{{ file.size | formatBytes}}</span>
+            </div>
+        </div>
     </div>
+
+    <div class="emptyInfo" ng-if="!dataRepositoryUpload.allfiles.length">
+        <h3>Select your files. Fill metadata. Upload</h3>
+    </div>
+
+    <section ng-if="dataRepositoryUpload.allfiles.length > 0">
+        <h4 class="card-header m-t-1">Metadata</h4>
+        <div class="card">
+            <div class="card__stripe">
+                <div class="card__content">
+                    <div>
+                        <div layout="row">
+                            <md-input-container flex="100">
+                                <label>Title</label>
+                                <input required ng-model="dataRepositoryUpload.form.title">
+                            </md-input-container>
+                        </div>
+                        <div>
+                            <textarea markdown-editor ng-model="dataRepositoryUpload.form.description" rows="5" placeholder="Please fill the description"></textarea>
+                            {{ dataRepositoryUpload.form.description }}
+                        </div>
+                        <h4 class="card-header">Authors</h4>
+                        <div layout="row" ng-repeat="creator in dataRepositoryUpload.form.creators" layout-sm="column">
+                            <a ng-if="dataRepositoryUpload.form.creators.length > 1" href="" style="margin: 20px 5px" flex="none" class="gb-icon-trash inherit noUnderline" ng-click="dataRepositoryUpload.removeFromArray(creator, dataRepositoryUpload.form.creators)"></a>
+                            <md-input-container flex-gt-sm="33" flex="100" flex="grow">
+                                <label>Name</label>
+                                <input required ng-model="creator.name">
+                            </md-input-container>
+                            <md-input-container flex-gt-sm="33" flex="100" flex="grow">
+                                <label>Affiliation</label>
+                                <input ng-model="creator.affiliation">
+                            </md-input-container>
+                            <md-input-container flex-gt-sm="33" flex="100" flex="grow">
+                                <label>ORCID</label>
+                                <input ng-model="creator.orcid">
+                            </md-input-container>
+                        </div>
+                        <div class="text-right">
+                            <a href="" class="gb-button--flat text-uppercase" ng-click="dataRepositoryUpload.addCreator()">Add another author</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card__stripe">
+                <div class="card__content">
+                    <div layout="row">
+                        <md-input-container flex="100">
+                            <label>License</label>
+                            <md-select ng-model="dataRepositoryUpload.form.license">
+                                <md-option><em>CC 0</em></md-option>
+                                <md-option><em>CC attribution</em></md-option>
+                                <md-option><em>CC none comercial</em></md-option>
+                                <md-option><em>Etc</em></md-option>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+                    <div layout="row">
+                        <md-input-container flex="100">
+                            <label>Citation</label>
+                            <input ng-model="dataRepositoryUpload.form.citation">
+                        </md-input-container>
+                    </div>
+                    {#<div layout="row" layout-align="end" flex>#}
+                        {#<md-button type="submit" class="md-raised md-primary" ng-click="eoi.submitAttempted = true">Upload</md-button>#}
+                        {#{{ dataRepositoryUpload.uploadForm.$valid }}#}
+                    {#</div>#}
+                </div>
+            </div>
+        </div>
+
+        <div class="emptyInfo" ng-if="!dataRepositoryUpload.uploadForm.$valid">
+            <h3>Please fill the metadata to upload</h3>
+        </div>
+
+        <div ng-if="dataRepositoryUpload.uploadForm.$valid">
+            <div layout="row" layout-align="end" flex>
+                <md-button type="submit" class="md-raised md-primary" ng-click="dataRepositoryUpload.upload()">Upload</md-button>
+            </div>
+        </div>
+
+    </section>
 </form>

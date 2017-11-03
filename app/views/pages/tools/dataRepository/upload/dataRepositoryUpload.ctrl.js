@@ -1,5 +1,7 @@
 'use strict';
 
+var _ = require('lodash');
+
 require('../markdownEditor.directive');
 
 angular
@@ -9,33 +11,42 @@ angular
 /** @ngInject */
 function dataRepositoryUploadCtrl(User, $http, Upload, $timeout) {
     var vm = this;
-
-    vm.createMetadataAndUpload = function() {
-        $http.post('/api/datarepo/metadata', {title: 'nmy title', description: 'my long elaborate description'})
-            .then(function(resData){
-                var metadata = new Blob([resData], {type: 'text/xml'});
-                var metadataFile = new File([metadata], "metadata");
-                upload(metadataFile);
-            })
-            .catch(function(err){
-                console.log(err);
-            });
+    vm.form = {
+        creators: [{}]
     };
 
-    var upload = function(metadataFile) {
+    vm.addCreator = function(){
+        vm.form.creators.push({});
+    };
+    vm.removeFromArray = function(item, items){
+        _.remove(items, function(n) {
+            return n == item;
+        });
+    };
+    //
+    //vm.createMetadataAndUpload = function() {
+    //    $http.post('/api/datarepo/metadata', {title: 'nmy title', description: 'my long elaborate description'})
+    //        .then(function(resData){
+    //            var metadata = new Blob([resData], {type: 'text/xml'});
+    //            var metadataFile = new File([metadata], "metadata");
+    //            upload(metadataFile);
+    //        })
+    //        .catch(function(err){
+    //            console.log(err);
+    //        });
+    //};
+
+    vm.upload = function() {
         var files = vm.allfiles;
         var fileUrl = ['http://aaa.aa', 'http://bbb.bb'];
         fileUrl = undefined;
-        var data_package = {
-            title: 'Test title',
-            description: 'test description'
-        };
+        var data_package = vm.form;
 
         vm.testUpload = Upload.upload({
             //url: 'http://localhost:3002/upload',
             url: 'http://api.gbif-dev.org/v1/data_packages/',
             headers: {'Authorization': 'Bearer ' + User.getAuthToken()}, // only for html5
-            data: {data_package: JSON.stringify(data_package), file: files, metadata: metadataFile, fileUrl: fileUrl},
+            data: {data_package: JSON.stringify(data_package), file: files, fileUrl: fileUrl},
             arrayKey: ''
         });
 
@@ -49,6 +60,15 @@ function dataRepositoryUploadCtrl(User, $http, Upload, $timeout) {
         }, function (evt) {
             vm.progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total));
             console.log(vm.progress);
+        });
+    };
+
+    //Load the current user and use to prefill the first creator
+    var activeUser = User.loadActiveUser();
+    if (activeUser) {
+        activeUser.then(function(currentUser){
+            vm.profile = currentUser.data;
+            vm.form.creators[0].name = vm.form.creators[0].name || vm.profile.firstName + ' ' + vm.profile.lastName;
         });
     }
 }

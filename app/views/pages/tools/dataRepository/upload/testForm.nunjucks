@@ -14,6 +14,7 @@
                accept="image/*" ngf-max-size="2MB"
                ngf-model-invalid="dataRepositoryUpload.errorFile">
         <input name="allfiles" ngf-select ng-model="dataRepositoryUpload.allfiles" type="file" multiple="" />
+        {{ dataRepositoryUpload.allfiles[0].name }}
 
         <br>
         <button ng-disabled="!dataRepositoryUpload.myForm.$valid"

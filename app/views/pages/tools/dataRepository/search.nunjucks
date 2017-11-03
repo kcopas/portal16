@@ -1,7 +1,6 @@
 <div class="horizontal-stripe light-background">
     <div class="container--narrow">
         <section>
-            <p class="text-error">To do this we need an endpoint that allows searching and filtering uploads. filters as a minimum on user</p>
             <div class="m-b-05">
                 <form class="search-box" ng-submit="dataRepository.search()">
                     <input type="text"
@@ -41,7 +40,7 @@
                                         {{result.description}}
                                     </p>
                                     <p class="small discreet--very">
-                                        {{result.created}} - 5 files - Archive size 4.5mb
+                                        {{ result.created | amDateFormat:'D MMMM YYYY' }} - {{ result.files.length }} files - Archive size {{ result.size | formatBytes }}
                                     </p>
                                 </div>
                             </div>
