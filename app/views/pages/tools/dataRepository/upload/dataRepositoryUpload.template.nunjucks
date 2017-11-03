@@ -1,4 +1,4 @@
-<div class="horizontal-stripe light-background seperator ng-cloak">
+<div class="horizontal-stripe light-background ng-cloak">
     <div class="container--narrow">
         <p class="text-error">
             To do this we need an endpoint that accepts both URLs, file system links? and uploading files. Validating the sparse meta data. and returns a DOI.

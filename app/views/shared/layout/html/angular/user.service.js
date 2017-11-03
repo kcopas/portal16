@@ -16,6 +16,19 @@
         .module('portal')
         .service('User', function ($http, $sessionStorage, $rootScope, AUTH_EVENTS, $cookies, $location, $window) {
                 var that = this;
+                var AUTH_TOKEN_NAME = 'token';
+
+                that.userFromToken = function () {
+                    var token = $cookies.get(AUTH_TOKEN_NAME);
+                    if (!token) {
+                        return;
+                    }
+                    return JSON.parse(atob(token.split('.')[1]));
+                };
+
+                that.getAuthToken = function () {
+                    return $cookies.get(AUTH_TOKEN_NAME);
+                };
 
                 that.loadActiveUser = function () {
                     var activeUser = $http.get('/api/user/me');

@@ -8,7 +8,7 @@ var angular = require('angular');
     angular
         .module('portal')
         .factory('DataPackage', function ($resource, env) {
-            return $resource(env.dataApi + 'data_packages/:id', null, {
+            return $resource(env.dataApi + 'data_packages/:doi', null, {
                     'query': {
                         method: 'GET',
                         isArray: false

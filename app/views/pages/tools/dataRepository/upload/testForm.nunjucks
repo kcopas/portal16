@@ -4,6 +4,8 @@
 {{ dataRepositoryUpload.progress }}
     <fieldset>
         <legend>Upload on form submit</legend>
+
+        <textarea markdown-editor>text area</textarea>
         Username:
         <input type="text" name="userName" ng-model="dataRepositoryUpload.username" size="31">
         <i ng-show="dataRepositoryUpload.myForm.userName.$error.required">*required</i>
@@ -15,7 +17,7 @@
 
         <br>
         <button ng-disabled="!dataRepositoryUpload.myForm.$valid"
-                ng-click="dataRepositoryUpload.uploadPic(dataRepositoryUpload.allfiles)">Submit</button>
+                ng-click="dataRepositoryUpload.createMetadataAndUpload()">Submit</button>
 
       <span class="progress" ng-show="dataRepositoryUpload.picFile.progress >= 0">
         <div style="width:{{dataRepositoryUpload.picFile.progress}}%"

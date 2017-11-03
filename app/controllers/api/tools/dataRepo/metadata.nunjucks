@@ -19,7 +19,7 @@
     </creators>
 
     <titles>
-        <title>{$ form.title | striptags $}</title>
+        <title>{$ title | striptags $}</title>
     </titles>
 
     {% if publisher %}
