@@ -1,39 +1,95 @@
+<section>
+    <h4 class="card-header m-t-1">Uploading in progress</h4>
+    <div class="card card--spaced">
+        <div class="card__content">
+            <h2>Uploading</h2>
+            <p>
+                Uploading your local files. If you are on a slow internet connection and the files are large this could take hours or more.
+            </p>
+            <md-progress-linear md-mode="determinate" value="{{dataRepositoryUpload.progress}}"></md-progress-linear>
+            <p>
+                Uploading from your external URLs. You can close the browser even if this hasn't finished. Once completed you can find the deposited files in "search->my uploads"
+            </p>
+            <md-progress-linear md-mode="indeterminate"></md-progress-linear>
+        </div>
+    </div>
+</section>
 <form name="dataRepositoryUpload.uploadForm"
       ng-submit="dataRepositoryUpload.uploadForm.$valid">
 
     <h4 class="card-header">Files</h4>
-    <div class="card">
+    <div class="card card--spaced">
         <div class="card__stripe">
-            <div class="card__content" ng-if="!dataRepositoryUpload.allfiles.length">
+            <div class="card__content">
                 <div>
                     <div ngf-drop
                          ngf-select
-                         name="allfiles"
-                         ng-model="dataRepositoryUpload.allfiles"
+                         name="files"
+                         ng-model="dataRepositoryUpload.files"
                          type="file"
                          required
                          ngf-model-options="{updateOn: 'change click drop dropUrl paste', allowInvalid: false, debounce: 0}"
-                         ngf-change="dataRepositoryUpload.test()"
+                         ngf-keep="'distinct'"
                          ngf-multiple="true"
                          multiple=""
-                         class="drop-box dropArea">Drop or select</div>
+                         class="drop-box dropArea" ng-class="{'dropArea--hasFiles': dataRepositoryUpload.files.length > 0}">Drop or select files</div>
                 </div>
             </div>
-            <div class="fileList" ng-repeat="file in dataRepositoryUpload.allfiles">
-                <span><a href="" class="gb-icon-trash inherit noUnderline" ng-click="dataRepositoryUpload.removeFromArray(file, dataRepositoryUpload.allfiles)"></a></span>
-                <span>{{ file.name }}</span>
-                <span class="discreet--very">{{ file.size | formatBytes}}</span>
+        </div>
+        <div class="card__stripe card__stripe--light">
+            <div class="card__content">
+                <div ng-if="dataRepositoryUpload.files.length > 0">
+                    <h4 class="card-header">Local</h4>
+                    <div class="card">
+                        {#<div class="card__content seperator--b">#}
+                            {#<div ngf-drop#}
+                                 {#ngf-select#}
+                                 {#name="files"#}
+                                 {#ng-model="dataRepositoryUpload.files"#}
+                                 {#type="file"#}
+                                 {#required#}
+                                 {#ngf-model-options="{updateOn: 'change click drop dropUrl paste', allowInvalid: false, debounce: 0}"#}
+                                 {#ngf-keep="'distinct'"#}
+                                 {#ngf-multiple="true"#}
+                                 {#multiple=""#}
+                                 {#class="drop-box dropArea" ng-class="{'dropArea--hasFiles': dataRepositoryUpload.files.length > 0}">Drop or select files</div>#}
+                        {#</div>#}
+                        <ul class="fileList">
+                            <li class="fileList__item" ng-repeat="file in dataRepositoryUpload.files">
+                                <div class="fileList__item__field fileList__item__icon gb-icon-file"></div>
+                                <div class="fileList__item__field fileList__item__field--main">
+                                    {{ file.name }} <span class="discreet--very">{{ file.size | formatBytes}}</span> <span class="warning" ng-if="file.size > 100000000"><md-tooltip md-direction="top">{{ "phrases.largeFileUploadWarning" | translate }}</md-tooltip>Large file</span>
+                                </div>
+                                <a href="" class="fileList__item__field fileList__item__action gb-icon-trash noUnderline" ng-click="dataRepositoryUpload.removeFromArray(file, dataRepositoryUpload.files)"></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <h4 class="card-header m-t-1">URLs</h4>
+                <div class="card">
+                    <ul class="fileList">
+                        <li class="fileList__item" ng-repeat="fileUrl in dataRepositoryUpload.fileUrls">
+                            <div class="fileList__item__field fileList__item__icon gb-icon-link"></div>
+                            <div class="fileList__item__field fileList__item__field--main">
+                                <input type="url" ng-model="fileUrl.val" placeholder="e.g. http://myServer.org/file/g68sz8"/>
+                            </div>
+                            <a ng-if="!$last" class="fileList__item__field fileList__item__action gb-icon-trash inherit noUnderline" href="" ng-click="dataRepositoryUpload.removeFromArray(fileUrl, dataRepositoryUpload.fileUrls)"></a>
+                            <span ng-if="$last && !fileUrl.val" class="discreet--very fileList__item__field fileList__item__icon gb-icon-add"></span>
+                            <a ng-if="$last && fileUrl.val" class="fileList__item__field fileList__item__action gb-icon-add inherit noUnderline" href="" ng-click="dataRepositoryUpload.fileUrls.push({})"></a>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="emptyInfo" ng-if="!dataRepositoryUpload.allfiles.length">
+    <div class="emptyInfo" ng-if="!dataRepositoryUpload.files.length && !dataRepositoryUpload.countNonEmptyItems(dataRepositoryUpload.fileUrls)">
         <h3>Select your files. Fill metadata. Upload</h3>
     </div>
 
-    <section ng-if="dataRepositoryUpload.allfiles.length > 0">
+    <section ng-show="dataRepositoryUpload.files.length > 0 || dataRepositoryUpload.countNonEmptyItems(dataRepositoryUpload.fileUrls)">
         <h4 class="card-header m-t-1">Metadata</h4>
-        <div class="card">
+        <div class="card card--spaced">
             <div class="card__stripe">
                 <div class="card__content">
                     <div>
@@ -44,28 +100,32 @@
                             </md-input-container>
                         </div>
                         <div>
-                            <textarea markdown-editor ng-model="dataRepositoryUpload.form.description" rows="5" placeholder="Please fill the description"></textarea>
-                            {{ dataRepositoryUpload.form.description }}
+                            <textarea markdown-editor on-mde-change="dataRepositoryUpload.updateDescription" ng-model="dataRepositoryUpload.form.description" required rows="5" placeholder="Please fill the description (required)"></textarea>
                         </div>
-                        <h4 class="card-header">Authors</h4>
-                        <div layout="row" ng-repeat="creator in dataRepositoryUpload.form.creators" layout-sm="column">
-                            <a ng-if="dataRepositoryUpload.form.creators.length > 1" href="" style="margin: 20px 5px" flex="none" class="gb-icon-trash inherit noUnderline" ng-click="dataRepositoryUpload.removeFromArray(creator, dataRepositoryUpload.form.creators)"></a>
-                            <md-input-container flex-gt-sm="33" flex="100" flex="grow">
-                                <label>Name</label>
-                                <input required ng-model="creator.name">
-                            </md-input-container>
-                            <md-input-container flex-gt-sm="33" flex="100" flex="grow">
-                                <label>Affiliation</label>
-                                <input ng-model="creator.affiliation">
-                            </md-input-container>
-                            <md-input-container flex-gt-sm="33" flex="100" flex="grow">
-                                <label>ORCID</label>
-                                <input ng-model="creator.orcid">
-                            </md-input-container>
-                        </div>
-                        <div class="text-right">
-                            <a href="" class="gb-button--flat text-uppercase" ng-click="dataRepositoryUpload.addCreator()">Add another author</a>
-                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card__stripe card__stripe--light">
+                <div class="card__content">
+                    <h4 class="card-header">Authors</h4>
+                    <div class="card card__content" layout="row" ng-repeat="creator in dataRepositoryUpload.form.creators" layout-sm="column">
+                        <a ng-if="dataRepositoryUpload.form.creators.length > 1" href="" style="margin: 20px 5px" flex="none" class="gb-icon-trash inherit noUnderline" ng-click="dataRepositoryUpload.removeFromArray(creator, dataRepositoryUpload.form.creators)"></a>
+                        <md-input-container flex-gt-sm="33" flex="100" flex="grow">
+                            <label>Name</label>
+                            <input required ng-model="creator.name">
+                        </md-input-container>
+                        <md-input-container flex-gt-sm="33" flex="100" flex="grow">
+                            <label>Affiliation</label>
+                            <input ng-model="creator.affiliation">
+                        </md-input-container>
+                        <md-input-container flex-gt-sm="33" flex="100" flex="grow">
+                            <label>ORCID</label>
+                            <input ng-model="creator.orcid">
+                        </md-input-container>
+                    </div>
+                    <div class="text-right">
+                        <a href="" class="gb-button--flat text-uppercase" ng-click="dataRepositoryUpload.addItemToArray(dataRepositoryUpload.form.creators)">Add another author</a>
                     </div>
                 </div>
             </div>
@@ -75,10 +135,9 @@
                         <md-input-container flex="100">
                             <label>License</label>
                             <md-select ng-model="dataRepositoryUpload.form.license">
-                                <md-option><em>CC 0</em></md-option>
-                                <md-option><em>CC attribution</em></md-option>
-                                <md-option><em>CC none comercial</em></md-option>
-                                <md-option><em>Etc</em></md-option>
+                                <md-option ng-repeat="license in dataRepositoryUpload.config.license" ng-value="license">
+                                    {{ 'license.' + license | translate }}
+                                </md-option>
                             </md-select>
                         </md-input-container>
                     </div>
