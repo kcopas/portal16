@@ -1,5 +1,5 @@
 <div class="horizontal-stripe light-background ng-cloak">
-    <div class="container--normal">
+    <div class="container--narrow">
         <div>
             {#{% include "./testForm.nunjucks" %}#}
             {% include "./form.nunjucks" %}

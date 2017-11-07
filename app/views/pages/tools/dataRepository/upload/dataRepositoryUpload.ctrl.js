@@ -9,18 +9,37 @@ angular
     .controller('dataRepositoryUploadCtrl', dataRepositoryUploadCtrl);
 
 /** @ngInject */
-function dataRepositoryUploadCtrl(User, Upload, $timeout) {
+function dataRepositoryUploadCtrl($state, $window, User, Upload, $timeout) {
     var vm = this;
     vm.config = {license: ['CC0_1_0', 'CC_BY_4_0', 'CC_BY_NC_4_0']};
-    vm.form = {
-        creators: [{}],
-        license: vm.config.license[0]
+    vm.states = {
+        FILL_FORM: 0,
+        UPLOADING: 1,
+        UPLOADED: 2,
+        FAILED_UPLOAD: 3
     };
-    vm.fileUrls = [{}];
+    vm.state = vm.states.FILL_FORM;
+
+    vm.initForm = function(){
+        vm.form = {
+            creators: [{}],
+            license: vm.config.license[0]
+        };
+        vm.fileUrls = [{}];
+        vm.files = [];
+        vm.state = vm.states.FILL_FORM;
+        vm.result = vm.errorMsg = undefined;
+    };
+    vm.initForm();
+
 
     vm.addItemToArray = function (items) {
         items.push({});
     };
+    vm.insertItemInArray = function (index, items) {
+        items.splice(index, 0, {});
+    };
+
     vm.removeFromArray = function (item, items) {
         _.remove(items, function (n) {
             return n == item;
@@ -37,26 +56,47 @@ function dataRepositoryUploadCtrl(User, Upload, $timeout) {
         }).length;
     };
 
+    vm.reload = function() {
+        $state.reload();
+    };
+
     vm.upload = function () {
+        //check that the upload isn't already started
+        if (vm.state == vm.states.UPLOADING) return;//to avoid duplicate uploads
+
+        //extract data to send
         var data_package = vm.form;
         var fileUrls = _.map(vm.fileUrls, function(e){
             return e.val;
         });
+
+        //reset upload info
+        vm.state = vm.states.UPLOADING;
+        vm.errorMsg = undefined;
+        vm.result = undefined;
+
+        //start upload
         vm.uploadProcess = Upload.upload({
-            url: 'http://localhost:3002/upload',
-            //url: 'http://api.gbif-dev.org/v1/data_packages/',
+            //url: 'http://localhost:3002/upload',
+            url: 'http://api.gbif-dev.org/v1/data_packages/',
             headers: {'Authorization': 'Bearer ' + User.getAuthToken()}, // only for html5
             data: {data_package: JSON.stringify(data_package), file: vm.files, fileUrl: fileUrls},
             arrayKey: ''
         });
 
+        $window.scrollTo(0, 0);
         vm.uploadProcess.then(function (response) {
             $timeout(function () {
+                vm.state = vm.states.UPLOADED;
                 vm.result = response.data;
             });
         }, function (response) {
-            if (response.status > 0)
-                vm.errorMsg = response.status + ': ' + response.data;
+            $timeout(function () {
+                vm.state = vm.states.FAILED_UPLOAD;
+                if (response.status > 0) {
+                    vm.errorMsg = response.data.code + ': ' + response.data.message;
+                }
+            });
         }, function (evt) {
             vm.progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total));
         });
