@@ -20,7 +20,7 @@ function dataRepositoryUploadCtrl($state, $window, User, Upload, $timeout) {
     };
     vm.state = vm.states.FILL_FORM;
 
-    vm.initForm = function(){
+    vm.initForm = function () {
         vm.form = {
             creators: [{}],
             license: vm.config.license[0]
@@ -46,18 +46,29 @@ function dataRepositoryUploadCtrl($state, $window, User, Upload, $timeout) {
         });
     };
 
-    vm.updateDescription = function(description){
+    vm.updateDescription = function (description) {
         vm.form.description = description;
     };
 
     vm.countNonEmptyItems = function (items) {
-        return _.filter(items, function(e){
+        return _.filter(items, function (e) {
             return e.val;
         }).length;
     };
 
-    vm.reload = function() {
+    vm.reload = function () {
         $state.reload();
+    };
+
+    vm.getCitationName = function (name) {
+        name = name ? name + '' : '';
+        name = name.replace(/\s\s+/g, ' ').trim();
+        var parts = name.split(' ');
+        var n = parts.pop() + ' ';
+        for (var i = 0; i < parts.length; i++) {
+            n += parts[i][0].toUpperCase() + ' ';
+        }
+        return n.trim();
     };
 
     vm.upload = function () {
@@ -66,7 +77,7 @@ function dataRepositoryUploadCtrl($state, $window, User, Upload, $timeout) {
 
         //extract data to send
         var data_package = vm.form;
-        var fileUrls = _.map(vm.fileUrls, function(e){
+        var fileUrls = _.map(vm.fileUrls, function (e) {
             return e.val;
         });
 
@@ -80,7 +91,15 @@ function dataRepositoryUploadCtrl($state, $window, User, Upload, $timeout) {
             //url: 'http://localhost:3002/upload',
             url: 'http://api.gbif-dev.org/v1/data_packages/',
             headers: {'Authorization': 'Bearer ' + User.getAuthToken()}, // only for html5
-            data: {data_package: JSON.stringify(data_package), file: vm.files, fileUrl: fileUrls},
+            data: {
+                data_package: JSON.stringify(data_package),
+                file: vm.files,
+                fileUrl: fileUrls,
+                IsNewVersionOfUrl: vm.isNewVersionOfUrl,
+                isIdenticalToUrl: vm.isIdenticalToUrl,
+                isDerivedFromUrl: vm.isDerivedFromUrl,
+                isDerivedFromFile: vm.isDerivedFromFile
+            },
             arrayKey: ''
         });
 

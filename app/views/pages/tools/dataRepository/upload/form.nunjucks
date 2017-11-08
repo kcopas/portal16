@@ -115,16 +115,116 @@
                             </md-select>
                         </md-input-container>
                     </div>
-                    <div layout="row">
-                        <md-input-container flex="100">
-                            <label>Citation</label>
-                            <input ng-model="dataRepositoryUpload.form.citation">
-                        </md-input-container>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <h4 class="card-header m-t-1">Related identifiers</h4>
+            <div class="card card--spaced">
+
+                <div class="card__stripe">
+                    <div class="card__content">
+                        <md-checkbox ng-model="dataRepositoryUpload.isDerivedFrom" class="md-primary m-b-0">This upload is derived from other sources</md-checkbox>
                     </div>
-                    {#<div layout="row" layout-align="end" flex>#}
-                        {#<md-button type="submit" class="md-raised md-primary" ng-click="eoi.submitAttempted = true">Upload</md-button>#}
-                        {#{{ dataRepositoryUpload.uploadForm.$valid }}#}
-                    {#</div>#}
+                </div>
+                <div class="card__stripe card__stripe--light" ng-show="dataRepositoryUpload.isDerivedFrom">
+                    <div class="card__content">
+                        <div class="card">
+                            <div class="card__content seperator--b">
+                                [Some description stating what it means and what formats are expected]
+                            </div>
+                            <div class="card__content" ng-if="!dataRepositoryUpload.isDerivedFromFile">
+                                <div ngf-drop
+                                     ngf-select
+                                     name="derivedFile"
+                                     ng-model="dataRepositoryUpload.isDerivedFromFile"
+                                     type="file"
+                                     ngf-model-options="{updateOn: 'change click drop dropUrl paste', allowInvalid: false, debounce: 0}"
+                                     ngf-multiple="false"
+                                     ngf-pattern="'.csv'"
+                                     class="drop-box dropArea--small">Drop or select file</div>
+                            </div>
+                            <ul class="fileList">
+                                <li class="fileList__item" ng-if="dataRepositoryUpload.isDerivedFromFile">
+                                    <div class="fileList__item__field fileList__item__icon gb-icon-file"></div>
+                                    <div class="fileList__item__field fileList__item__field--main">
+                                        {{ dataRepositoryUpload.isDerivedFromFile.name }} <span class="discreet--very">{{ dataRepositoryUpload.isDerivedFromFile.size | formatBytes}}</span>
+                                    </div>
+                                    <a href="" class="fileList__item__field fileList__item__action gb-icon-trash noUnderline" ng-click="dataRepositoryUpload.isDerivedFromFile = undefined"></a>
+                                </li>
+                                <li class="fileList__item">
+                                    <div class="fileList__item__field fileList__item__icon gb-icon-link"></div>
+                                    <div class="fileList__item__field fileList__item__field--main">
+                                        <input type="url" ng-model="dataRepositoryUpload.isDerivedFromUrl" placeholder="e.g. https://doi.org/xxxx/xx.xxxxxx"/>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card__stripe">
+                    <div class="card__content">
+                        <md-checkbox ng-model="dataRepositoryUpload.isIdenticalTo" class="md-primary m-b-0">This upload is identical to another resource</md-checkbox>
+                    </div>
+                </div>
+                <div class="card__stripe card__stripe--light" ng-show="dataRepositoryUpload.isIdenticalTo">
+                    <div class="card__content">
+                        <div class="card">
+                            <div class="card__content seperator--b">
+                                If your upload is a copy of another source, then you should provide the originals identifier.
+                            </div>
+                            <ul class="fileList">
+                                <li class="fileList__item">
+                                    <div class="fileList__item__field fileList__item__icon gb-icon-link"></div>
+                                    <div class="fileList__item__field fileList__item__field--main">
+                                        <input type="url" ng-model="dataRepositoryUpload.isIdenticalToUrl" placeholder="e.g. https://doi.org/xxxx/xx.xxxxxx"/>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card__stripe">
+                    <div class="card__content">
+                        <md-checkbox ng-model="dataRepositoryUpload.isNewVersionOf" class="md-primary m-b-0">This upload is new version of previous resource</md-checkbox>
+                    </div>
+                </div>
+                <div class="card__stripe card__stripe--light" ng-show="dataRepositoryUpload.isNewVersionOf">
+                    <div class="card__content">
+                        <div class="card">
+                            <div class="card__content seperator--b">
+                                [description for what this means and when to use it]
+                            </div>
+                            <ul class="fileList">
+                                <li class="fileList__item">
+                                    <div class="fileList__item__field fileList__item__icon gb-icon-link"></div>
+                                    <div class="fileList__item__field fileList__item__field--main">
+                                        <input type="url" ng-model="dataRepositoryUpload.isNewVersionOfUrl" placeholder="e.g. https://doi.org/xxxx/xx.xxxxxx"/>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <h4 class="card-header m-t-1">Citation</h4>
+            <div class="card card--spaced">
+                <div class="card__stripe">
+                    <div class="card__content">
+                        <div>
+                            <p>The citation is generated from input fields and cannot be changed</p>
+                            <blockquote>
+                                <span ng-repeat="creator in dataRepositoryUpload.form.creators">{{ dataRepositoryUpload.getCitationName(creator.name) }}{{ $last ? '' : ', '}}</span> (2017):
+                                <span ng-if="dataRepositoryUpload.form.title">{{ dataRepositoryUpload.form.title }}</span><span ng-if="!dataRepositoryUpload.form.title">[Your dataset title]</span>. <span>GBIF</span>. <span>[Generated DOI]</span>
+                            </blockquote>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

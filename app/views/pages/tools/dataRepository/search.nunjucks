@@ -37,7 +37,7 @@
                             <div class="card__stripe">
                                 <div class="card__content clearfix">
                                     <p>
-                                        {{result.description}}
+                                        {{result.description | md2html | stripTags | truncate:300 }}
                                     </p>
                                     <p class="small discreet--very">
                                         {{ result.created | amDateFormat:'D MMMM YYYY' }} - {{ result.files.length }} files - Archive size {{ result.size | formatBytes }}
