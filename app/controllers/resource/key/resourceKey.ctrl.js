@@ -16,6 +16,7 @@ module.exports = function (app) {
 router.get('/data-use/:id/:title?\.:ext?', function (req, res, next) {
     prose(req, res, next, 'data-use', 'pages/resource/key/dataUse/dataUseStory');
 });
+
 router.get('/dataUse/:id/:title?\.:ext?', function (req, res) {
     res.redirect(302, res.locals.gb.locales.urlPrefix + '/data-use/' + req.params.id + '/' + req.params.title);
 });
@@ -37,7 +38,7 @@ router.get('/news/:id/:title?\.:ext?', function (req, res, next) {
 });
 
 router.get('/tool/:id/:title?\.:ext?', function (req, res, next) {
-    prose(req, res, next, 'tool', 'pages//resource/key/tool/tool');
+    prose(req, res, next, 'tool', 'pages/resource/key/tool/tool');
 });
 
 router.get('/programme/:id/:title?\.:ext?', function (req, res, next) {
@@ -46,6 +47,11 @@ router.get('/programme/:id/:title?\.:ext?', function (req, res, next) {
 
 router.get('/project/:id/:title?\.:ext?', function (req, res, next) {
     prose(req, res, next, 'project', 'pages/resource/key/project/project');
+});
+
+router.get('/api/resource/tool', function (req, res, next) {
+    let alias = requ.query.alias;
+    prose(req, res, next, 'tool', 'pages/resource/key/tool/tool');
 });
 
 router.get('/country2/:id/:title?\.:ext?', function (req, res, next) {

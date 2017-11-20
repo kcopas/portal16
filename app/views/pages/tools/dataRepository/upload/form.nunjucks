@@ -122,92 +122,41 @@
         <div>
             <h4 class="card-header m-t-1">Related identifiers</h4>
             <div class="card card--spaced">
-
+                {#<div class="card__stripe">#}
+                    {#<div class="card__content">#}
+                        {#<md-checkbox ng-model="dataRepositoryUpload.hasRelatedIdentifiers" class="md-primary m-b-0">This upload is derived from other sources</md-checkbox>#}
+                    {#</div>#}
+                {#</div>#}
                 <div class="card__stripe">
-                    <div class="card__content">
-                        <md-checkbox ng-model="dataRepositoryUpload.isDerivedFrom" class="md-primary m-b-0">This upload is derived from other sources</md-checkbox>
+                    <div class="card__content seperator--b">
+                        [Some description stating what it means and what formats are expected]
                     </div>
-                </div>
-                <div class="card__stripe card__stripe--light" ng-show="dataRepositoryUpload.isDerivedFrom">
                     <div class="card__content">
-                        <div class="card">
-                            <div class="card__content seperator--b">
-                                [Some description stating what it means and what formats are expected]
+                        <div ngf-drop
+                             ngf-select
+                             name="derivedFile"
+                             ng-model="dataRepositoryUpload.relatedIdentifiersFile"
+                             type="file"
+                             ngf-model-options="{updateOn: 'change click drop dropUrl paste', allowInvalid: false, debounce: 0}"
+                             ngf-multiple="false"
+                             ngf-pattern="'.csv'"
+                             class="drop-box dropArea--small">Drop or select file</div>
+                    </div>
+                    <ul class="fileList">
+                        <li class="fileList__item" ng-if="dataRepositoryUpload.relatedIdentifiersFile">
+                            <div class="fileList__item__field fileList__item__icon gb-icon-file"></div>
+                            <div class="fileList__item__field fileList__item__field--main">
+                                {{ dataRepositoryUpload.relatedIdentifiersFile.name }} <span class="discreet--very">{{ dataRepositoryUpload.relatedIdentifiersFile.size | formatBytes}}</span>
                             </div>
-                            <div class="card__content" ng-if="!dataRepositoryUpload.isDerivedFromFile">
-                                <div ngf-drop
-                                     ngf-select
-                                     name="derivedFile"
-                                     ng-model="dataRepositoryUpload.isDerivedFromFile"
-                                     type="file"
-                                     ngf-model-options="{updateOn: 'change click drop dropUrl paste', allowInvalid: false, debounce: 0}"
-                                     ngf-multiple="false"
-                                     ngf-pattern="'.csv'"
-                                     class="drop-box dropArea--small">Drop or select file</div>
+                            <a href="" class="fileList__item__field fileList__item__action gb-icon-trash noUnderline" ng-click="dataRepositoryUpload.relatedIdentifiersFile = undefined"></a>
+                        </li>
+                        <li class="fileList__item">
+                            <div class="fileList__item__field fileList__item__icon gb-icon-link"></div>
+                            <div class="fileList__item__field fileList__item__field--main">
+                                <input type="url" ng-model="dataRepositoryUpload.relatedIdentifiersUrl" placeholder="e.g. https://doi.org/xxxx/xx.xxxxxx"/>
                             </div>
-                            <ul class="fileList">
-                                <li class="fileList__item" ng-if="dataRepositoryUpload.isDerivedFromFile">
-                                    <div class="fileList__item__field fileList__item__icon gb-icon-file"></div>
-                                    <div class="fileList__item__field fileList__item__field--main">
-                                        {{ dataRepositoryUpload.isDerivedFromFile.name }} <span class="discreet--very">{{ dataRepositoryUpload.isDerivedFromFile.size | formatBytes}}</span>
-                                    </div>
-                                    <a href="" class="fileList__item__field fileList__item__action gb-icon-trash noUnderline" ng-click="dataRepositoryUpload.isDerivedFromFile = undefined"></a>
-                                </li>
-                                <li class="fileList__item">
-                                    <div class="fileList__item__field fileList__item__icon gb-icon-link"></div>
-                                    <div class="fileList__item__field fileList__item__field--main">
-                                        <input type="url" ng-model="dataRepositoryUpload.isDerivedFromUrl" placeholder="e.g. https://doi.org/xxxx/xx.xxxxxx"/>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card__stripe">
-                    <div class="card__content">
-                        <md-checkbox ng-model="dataRepositoryUpload.isIdenticalTo" class="md-primary m-b-0">This upload is identical to another resource</md-checkbox>
-                    </div>
-                </div>
-                <div class="card__stripe card__stripe--light" ng-show="dataRepositoryUpload.isIdenticalTo">
-                    <div class="card__content">
-                        <div class="card">
-                            <div class="card__content seperator--b">
-                                If your upload is a copy of another source, then you should provide the originals identifier.
-                            </div>
-                            <ul class="fileList">
-                                <li class="fileList__item">
-                                    <div class="fileList__item__field fileList__item__icon gb-icon-link"></div>
-                                    <div class="fileList__item__field fileList__item__field--main">
-                                        <input type="url" ng-model="dataRepositoryUpload.isIdenticalToUrl" placeholder="e.g. https://doi.org/xxxx/xx.xxxxxx"/>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card__stripe">
-                    <div class="card__content">
-                        <md-checkbox ng-model="dataRepositoryUpload.isNewVersionOf" class="md-primary m-b-0">This upload is new version of previous resource</md-checkbox>
-                    </div>
-                </div>
-                <div class="card__stripe card__stripe--light" ng-show="dataRepositoryUpload.isNewVersionOf">
-                    <div class="card__content">
-                        <div class="card">
-                            <div class="card__content seperator--b">
-                                [description for what this means and when to use it]
-                            </div>
-                            <ul class="fileList">
-                                <li class="fileList__item">
-                                    <div class="fileList__item__field fileList__item__icon gb-icon-link"></div>
-                                    <div class="fileList__item__field fileList__item__field--main">
-                                        <input type="url" ng-model="dataRepositoryUpload.isNewVersionOfUrl" placeholder="e.g. https://doi.org/xxxx/xx.xxxxxx"/>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>

@@ -1,1 +1,1 @@
-Some elaborate description from contentful
+<ng-include src="'/templates/data-repository/about.html'" ></ng-include>

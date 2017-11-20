@@ -95,10 +95,8 @@ function dataRepositoryUploadCtrl($state, $window, User, Upload, $timeout) {
                 data_package: JSON.stringify(data_package),
                 file: vm.files,
                 fileUrl: fileUrls,
-                IsNewVersionOfUrl: vm.isNewVersionOfUrl,
-                isIdenticalToUrl: vm.isIdenticalToUrl,
-                isDerivedFromUrl: vm.isDerivedFromUrl,
-                isDerivedFromFile: vm.isDerivedFromFile
+                identifiersFileUrl: vm.relatedIdentifiersUrl,
+                identifiersFile: vm.relatedIdentifiersFile
             },
             arrayKey: ''
         });

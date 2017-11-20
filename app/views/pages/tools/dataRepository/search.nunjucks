@@ -59,6 +59,9 @@
                             ng-show="dataRepository.uploads.count > dataRepository.limit">
                     </uib-pagination>
                 </div>
+                <div class="emptyInfo" ng-if="dataRepository.uploads.count == 0">
+                    <h3>No results</h3>
+                </div>
             </div>
         </section>
     </div>
