@@ -50,8 +50,16 @@ router.get('/project/:id/:title?\.:ext?', function (req, res, next) {
 });
 
 router.get('/api/resource/tool', function (req, res, next) {
-    let alias = requ.query.alias;
-    prose(req, res, next, 'tool', 'pages/resource/key/tool/tool');
+    let query = req.query;
+    resource.getFirst(query, 2, false, query.locale)
+        .then(function (result) {
+            helper.renderPage(req, res, next, result, 'pages/resource/key/tool/toolMain');
+        })
+        .catch(function(err){
+            res.status(500);
+            res.send(err);
+        });
+
 });
 
 router.get('/country2/:id/:title?\.:ext?', function (req, res, next) {
@@ -75,10 +83,12 @@ router.get('/country2/:id/:title?\.:ext?', function (req, res, next) {
         });
 });
 
-function prose(req, res, next, type, template){
+function prose(req, res, next, type, template, redirectToSlug){
     let entry = req.params.id,
         entryTitle = req.params.title,
         preview = entryTitle === '_preview';// too see the preview of an item (using the preview api) call an item with /[id]/_preview
+
+    redirectToSlug = redirectToSlug !== false;
     //search for items with that id. search is used instead of entry get as search allow for includes of assets etc
     resource.searchContentful(entry, 2, preview, res.locals.gb.locales.current)
         .then(function (results) {
@@ -111,7 +121,7 @@ function prose(req, res, next, type, template){
             }
 
             //if not a preview, then make sure the title is a part of the url by redirecting if necessary
-            if (!preview) {
+            if (!preview && redirectToSlug) {
                 if (slugTitle != entryTitle){
                     res.redirect(302, res.locals.gb.locales.urlPrefix + '/'+ type + '/' + entry + '/' + slugTitle);
                     return;
