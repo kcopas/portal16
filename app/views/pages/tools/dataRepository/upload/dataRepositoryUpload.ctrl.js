@@ -77,6 +77,13 @@ function dataRepositoryUploadCtrl($state, $window, User, Upload, $timeout) {
 
         //extract data to send
         var data_package = vm.form;
+        data_package.creators = data_package.creators.map(function(creator){
+            return {
+                name: creator.name,
+                identifier: creator.identifier,
+                affiliation: creator.affiliation ? [creator.affiliation] : undefined
+            }
+        });
         var fileUrls = _.map(vm.fileUrls, function (e) {
             return e.val;
         });
@@ -92,7 +99,7 @@ function dataRepositoryUploadCtrl($state, $window, User, Upload, $timeout) {
             url: 'http://api.gbif-dev.org/v1/data_packages/',
             headers: {'Authorization': 'Bearer ' + User.getAuthToken()}, // only for html5
             data: {
-                data_package: JSON.stringify(data_package),
+                dataPackage: JSON.stringify(data_package),
                 file: vm.files,
                 fileUrl: fileUrls,
                 identifiersFileUrl: vm.relatedIdentifiersUrl,
