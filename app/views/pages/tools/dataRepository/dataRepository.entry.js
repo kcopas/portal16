@@ -12,15 +12,19 @@ angular
     .controller('dataRepositoryCtrl', dataRepositoryCtrl);
 
 /** @ngInject */
-function dataRepositoryCtrl(User, $state, DataPackageSearch) {
+function dataRepositoryCtrl(User, $scope, AUTH_EVENTS, USER_ROLES, $sessionStorage, $state, DataPackageSearch) {
     var vm = this;
+    var REPO_USER_ROLE = 'REGISTRY_ADMIN';
     vm.$state = $state;
     vm.myUploads = false;
     vm.uploads;
 
-    //get user from storage - if the user session has expired the backend will fail
-    var user = User.userFromToken();
-    vm.username = user ? user.userName : undefined;
+    function updateUser() {
+        var user = $sessionStorage.user;
+        vm.isRepoUser = User.hasRole(USER_ROLES.REPOSITORY_USER);
+        vm.username = user ? user.userName : undefined;
+    }
+    updateUser();
 
     vm.search = function() {
         var apiQuery = {q: vm.q};
@@ -34,6 +38,10 @@ function dataRepositoryCtrl(User, $state, DataPackageSearch) {
         });
     };
     vm.search();
+
+    $scope.$on(AUTH_EVENTS.USER_UPDATED, function () {
+        updateUser();
+    });
 }
 
 module.exports = dataRepositoryCtrl;

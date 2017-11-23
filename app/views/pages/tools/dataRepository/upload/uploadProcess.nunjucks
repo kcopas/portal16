@@ -64,7 +64,7 @@
             </div>
             <div class="card__stripe card__content clearfix">
                 <a href="" class="gb-button--flat" ng-click="dataRepositoryUpload.reload()">New upload</a>
-                <a href="" class="gb-button--brand pull-right" ui-sref="dataRepositoryKey({key:dataRepositoryUpload.result.doi})">Go to upload</a>
+                <a href="" class="gb-button--brand pull-right" ui-sref="dataRepositoryKey({key:dataRepositoryUpload.result.key})">Go to upload</a>
             </div>
         </div>
     </div>

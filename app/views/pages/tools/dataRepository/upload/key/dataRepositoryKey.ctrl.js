@@ -7,15 +7,14 @@ angular
 /** @ngInject */
 function dataRepositoryKeyCtrl($stateParams, DataPackage, ResourceSearch) {
     var vm = this;
-    vm.doi = $stateParams.key;
-    vm.citations = ResourceSearch.query({q: '"' + vm.doi + '"', limit: 0});
+    vm.key = $stateParams.key;
+    vm.citations = ResourceSearch.query({q: '"' + vm.key + '"', limit: 0});
 
-    DataPackage.get({doi: vm.doi}, function(data){
+    DataPackage.get({key: vm.key}, function(data){
         vm.upload = data;
     }, function(err){
         console.log(err);
     });
-    console.log(vm.doi);
 
     vm.guessFileName = function(pathName){
         return pathName.split('/').pop();

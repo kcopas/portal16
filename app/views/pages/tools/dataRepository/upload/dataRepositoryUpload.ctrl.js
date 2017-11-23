@@ -12,6 +12,7 @@ angular
 function dataRepositoryUploadCtrl($state, $window, User, Upload, $timeout) {
     var vm = this;
     vm.config = {license: ['CC0_1_0', 'CC_BY_4_0', 'CC_BY_NC_4_0']};
+    vm.orcidPattern = /^(https?:\/\/orcid.org\/)?(([0-9]{4}-){3}([0-9]{3}[0-9X]))$/;
     vm.states = {
         FILL_FORM: 0,
         UPLOADING: 1,
@@ -81,6 +82,7 @@ function dataRepositoryUploadCtrl($state, $window, User, Upload, $timeout) {
             return {
                 name: creator.name,
                 identifier: creator.identifier,
+                identifierScheme: 'ORCID',
                 affiliation: creator.affiliation ? [creator.affiliation] : undefined
             }
         });
@@ -119,6 +121,8 @@ function dataRepositoryUploadCtrl($state, $window, User, Upload, $timeout) {
                 vm.state = vm.states.FAILED_UPLOAD;
                 if (response.status > 0) {
                     vm.errorMsg = response.data.code + ': ' + response.data.message;
+                } else {
+                    vm.errorMsg = 'Unknown error occurred';
                 }
             });
         }, function (evt) {

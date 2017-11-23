@@ -93,7 +93,7 @@
                             </md-input-container>
                             <md-input-container flex-gt-sm="33" flex="100" flex="grow">
                                 <label>ORCID</label>
-                                <input ng-model="creator.orcid">
+                                <input ng-model="creator.identifier" type="text" ng-pattern="dataRepositoryUpload.orcidPattern">
                             </md-input-container>
                             <div flex="100" class="text-right">
                                 <a ng-if="dataRepositoryUpload.form.creators.length > 1" href="" style="font-size:18px" class="gb-icon-trash inherit noUnderline" ng-click="dataRepositoryUpload.removeFromArray(creator, dataRepositoryUpload.form.creators)"></a>
@@ -169,8 +169,9 @@
                         <div>
                             <p>The citation is generated from input fields and cannot be changed</p>
                             <blockquote>
-                                <span ng-repeat="creator in dataRepositoryUpload.form.creators">{{ dataRepositoryUpload.getCitationName(creator.name) }}{{ $last ? '' : ', '}}</span> (2017):
-                                <span ng-if="dataRepositoryUpload.form.title">{{ dataRepositoryUpload.form.title }}</span><span ng-if="!dataRepositoryUpload.form.title">[Your dataset title]</span>. <span>GBIF</span>. <span>[Generated DOI]</span>
+                                <code>{authors} ({pubDate})<br/>{title}. [Version {version}]. GBIF.<br/>Dataset package {doi}, accessed via GBIF.org on {YYYY-MM-DD}.</code>
+                                {#<span ng-repeat="creator in dataRepositoryUpload.form.creators">{{ dataRepositoryUpload.getCitationName(creator.name) }}{{ $last ? '' : ', '}}</span> (2017):#}
+                                {#<span ng-if="dataRepositoryUpload.form.title">{{ dataRepositoryUpload.form.title }}</span><span ng-if="!dataRepositoryUpload.form.title">[Your dataset title]</span>. <span>GBIF</span>. <span>[Generated DOI]</span>#}
                             </blockquote>
                         </div>
                     </div>

@@ -60,7 +60,7 @@
                                             <div>
                                                 <ul class="p-0">
                                                     <li ng-repeat="creator in dataRepositoryKey.upload.creators">
-                                                        {{ creator.name }}<span ng-if="creator.affiliation"> - {{ creator.affiliation }}</span> <a ng-href="{{ creator.orcid }}"><img src="/img/orcid_16x16.gif" class="orcid-small">{{ creator.orcid }}</a>
+                                                        {{ creator.name }}<span ng-repeat="affiliation in creator.affiliation" class="text-italic">{{ $first ? ' - ' : ''}} {{ affiliation }}{{ $last ? '' : ', '}}</span> <a ng-if="creator.identifierScheme == 'ORCID'" ng-href="{{ creator.identifier }}" class="p-l-05"><img src="/img/orcid_16x16.gif" class="orcid-small">{{ creator.identifier }}</a>
                                                     </li>
                                                 </ul>
                                             </div>

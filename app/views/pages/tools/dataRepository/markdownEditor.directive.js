@@ -3,7 +3,6 @@ var angular = require('angular'),
     SimpleMDE = require('simplemde'),
     _ = require('lodash');
 
-console.log('markdownEditor file');
 angular
     .module('portal')
     .directive('markdownEditor', function () {

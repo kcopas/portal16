@@ -66,7 +66,7 @@
                                             <nav><h2>{$ __('menu.' + category.name) $}</h2>
                                                 <ul class="mainMenu__childItem">
                                                     {% for item in category.items %}
-                                                        <li>
+                                                        <li {% if item.roles %} ng-if='nav.hasRole({$ item.roles | rawJson $})' {% endif %}>
                                                             <a href="{% if item.type != 'EXTERNAL' %}{$ gb.locales.urlPrefix $}{% endif %}{$ item.url $}">{$
                                                                 __('menu.' + item.name) $}
                                                                 {% if item.type == 'EXTERNAL' %}
