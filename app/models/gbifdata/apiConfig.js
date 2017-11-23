@@ -3,7 +3,9 @@
 var baseConfig = require('../../../config/config'),
     clientTileApi = baseConfig.tileApi,
     baseUrl = baseConfig.serverProtocol + baseConfig.dataApi,
-    crawlerUrl = baseConfig.serverProtocol + baseConfig.crawlerApi,
+    oozie = baseConfig.serverProtocol + baseConfig.oozie,
+    yarnResourceManager = baseConfig.serverProtocol + baseConfig.yarnResourceManager,
+    elk = baseConfig.serverProtocol + baseConfig.elk,
     identityBaseUrl = baseConfig.serverProtocol + baseConfig.identityApi;
 
 // TODO Establish URL concatenation policy. Always no trailing slash?
@@ -24,10 +26,22 @@ var apiConfig = {
         url: baseUrl + 'dataset/search/'
     },
     crawlingDatasetProcessRunning: {
-        url: crawlerUrl + 'dataset/process/running'
+        url: baseUrl + 'dataset/process/running'
+    },
+    oozie: {
+        url: oozie
+    },
+    yarnResourceManager: {
+        url: yarnResourceManager
     },
     image: {
         url: baseConfig.dataApi + 'image/unsafe/'
+    },
+    mapCapabilities: {
+        url: baseConfig.serverProtocol + baseConfig.dataApiV2 + 'map/occurrence/density/capabilities.json'
+    },
+    mapOccurrenceDensity: {
+        url: baseConfig.serverProtocol + baseConfig.dataApiV2 + 'map/occurrence/density/'
     },
     installation: {
         url: baseUrl + 'installation/'
@@ -186,6 +200,9 @@ var apiConfig = {
     },
     openTreeOfLife: {
         url: 'https://api.opentreeoflife.org/v3/'
+    },
+    elkSearch: {
+        url: elk + 'elasticsearch/'
     }
 };
 

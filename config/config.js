@@ -7,14 +7,17 @@ var path = require('path'),
     dataApiV2 = yargs.dataapiv2,
     dataApi = yargs.dataapi,
     tileApi = yargs.tileapi,
+    basemapTileApi = yargs.basemapTileApi,
     identityApi = yargs.identityApi,
-    crawlerApi = yargs.crawlerApi,
     credentials = yargs.credentials,
     redirects = yargs.redirects,
     verification = yargs.verification,
     analyticsImg = yargs.analyticsImg,
     contentfulApi = yargs.contentfulApi,
     contentfulPreviewApi = yargs.contentfulPreviewApi,
+    oozie = yargs.oozie,
+    yarnResourceManager = yargs.yarnResourceManager,
+    elk = yargs.elk,
     publicConstantKeys = {
         dataset: {
             backbone: 'd7dddbf4-2cf0-4f39-9b2a-bb099caae36c',
@@ -41,7 +44,8 @@ var path = require('path'),
         'ru': 'ru',
         'pt': 'pt'
     },
-    defaultLocale = 'en';
+    defaultLocale = 'en',
+    userAgent = 'GBIF_WEBSITE';
 
 // NB endpoints are VERY mixed. Ideally everything should be prod unless we are testing functionality that are developed in sync.
 var config = {
@@ -58,8 +62,8 @@ var config = {
         dataApiV2: dataApiV2 || '//api.gbif.org/v2/',
         dataApi: dataApi || '//api.gbif-dev.org/v1/',
         tileApi: tileApi || '//api.gbif.org/v1/map/density/tile.png',
-        identityApi: identityApi || '//api.gbif-dev.org/v1/',
-        crawlerApi: crawlerApi || '//crawler.gbif.org/',
+        basemapTileApi: basemapTileApi || '//tile.gbif-dev.org',
+        identityApi: identityApi || '//api.gbif.org/v1/',
         analyticsImg: analyticsImg || 'www.gbif.org/sites/default/files/gbif_analytics/',
         domain: 'http://localhost:3000',
         topDomain: undefined,
@@ -68,12 +72,16 @@ var config = {
         verification: verification || (rootPath + '/app/models/verification/sample'),
         contentfulApi: contentfulApi || 'https://cdn.contentful.com/',
         contentfulPreviewApi: contentfulPreviewApi || 'https://preview.contentful.com/',
-        elasticContentful: elasticContentful || 'http://cms-search.gbif.org:9200/',//'http://cms-search.gbif-dev.org:9200/',
+        elasticContentful: elasticContentful || 'http://cms-search.gbif-dev.org:9200/',//'http://cms-search.gbif-dev.org:9200/',
+        oozie: oozie || '//c5master1-vh.gbif.org:11000/oozie/v2/',
+        yarnResourceManager: yarnResourceManager || '//c5master2-vh.gbif.org:8088/ws/v1/',
+        elk: elk || '//elk.gbif.org:5601/',
         locales: locales,
         defaultLocale: defaultLocale,
         contentfulLocaleMap: contentfulLocaleMap,
         publicConstantKeys: publicConstantKeys,
-        fbAppId: 1534726343485342
+        fbAppId: 1534726343485342,
+        userAgent: userAgent
     },
     dev: {
         env: env,
@@ -88,8 +96,8 @@ var config = {
         dataApiV2: dataApiV2 || '//api.gbif-dev.org/v2/',
         dataApi: dataApi || '//api.gbif-dev.org/v1/',
         tileApi: tileApi || '//api.gbif-dev.org/v1/map/density/tile.png',
+        basemapTileApi: basemapTileApi || '//tile.gbif-dev.org',
         identityApi: identityApi || '//api.gbif-dev.org/v1/',
-        crawlerApi: crawlerApi || '//crawler.gbif-dev.org/',
         analyticsImg: analyticsImg || 'www.gbif-dev.org/sites/default/files/gbif_analytics/',
         domain: 'https://www.gbif-dev.org',
         topDomain: 'gbif-dev.org',
@@ -99,11 +107,15 @@ var config = {
         contentfulApi: contentfulApi || 'https://cdn.contentful.com/',
         contentfulPreviewApi: contentfulPreviewApi || 'https://preview.contentful.com/',
         elasticContentful: elasticContentful || 'http://cms-search.gbif-dev.org:9200/',
+        oozie: oozie || '//c5master1-vh.gbif.org:11000/oozie/v2/',
+        yarnResourceManager: yarnResourceManager || '//c5master2-vh.gbif.org:8088/ws/v1/',
+        elk: elk || '//elk.gbif.org:5601/',
         locales: locales,
         defaultLocale: defaultLocale,
         contentfulLocaleMap: contentfulLocaleMap,
         publicConstantKeys: publicConstantKeys,
-        fbAppId: 1534726343485342
+        fbAppId: 1534726343485342,
+        userAgent: userAgent
     },
     uat: {
         env: env,
@@ -118,8 +130,8 @@ var config = {
         dataApiV2: dataApiV2 || '//api.gbif-uat.org/v2/',
         dataApi: dataApi || '//api.gbif-uat.org/v1/',
         tileApi: tileApi || '//api.gbif-uat.org/v1/map/density/tile.png',
+        basemapTileApi: basemapTileApi || '//tile.gbif-uat.org',
         identityApi: identityApi || '//api.gbif-uat.org/v1/',
-        crawlerApi: crawlerApi || '//crawler.gbif-uat.org/',
         analyticsImg: analyticsImg || 'www.gbif-uat.org/sites/default/files/gbif_analytics/',
         domain: 'https://www.gbif-uat.org',
         topDomain: 'gbif-uat.org',
@@ -129,11 +141,15 @@ var config = {
         contentfulApi: contentfulApi || 'https://cdn.contentful.com/',
         contentfulPreviewApi: contentfulPreviewApi || 'https://preview.contentful.com/',
         elasticContentful: elasticContentful || 'http://cms-search.gbif-uat.org:9200/',
+        oozie: oozie || '//c5master1-vh.gbif.org:11000/oozie/v2/',
+        yarnResourceManager: yarnResourceManager || '//c5master2-vh.gbif.org:8088/ws/v1/',
+        elk: elk || '//elk.gbif.org:5601/',
         locales: locales,
         defaultLocale: defaultLocale,
         contentfulLocaleMap: contentfulLocaleMap,
         publicConstantKeys: publicConstantKeys,
-        fbAppId: 1534726343485342
+        fbAppId: 1534726343485342,
+        userAgent: userAgent
     },
     prod: {
         env: env,
@@ -148,8 +164,8 @@ var config = {
         dataApiV2: dataApiV2 || '//api.gbif.org/v2/',
         dataApi: dataApi || '//api.gbif.org/v1/',
         tileApi: tileApi || '//api.gbif.org/v1/map/density/tile.png',
+        basemapTileApi: basemapTileApi || '//tile.gbif.org',
         identityApi: identityApi || '//api.gbif.org/v1/',
-        crawlerApi: crawlerApi || '//crawler.gbif.org/',
         analyticsImg: analyticsImg || 'www.gbif.org/sites/default/files/gbif_analytics/',
         domain: 'https://www.gbif.org',
         topDomain: 'gbif.org',
@@ -159,11 +175,15 @@ var config = {
         contentfulApi: contentfulApi || 'https://cdn.contentful.com/',
         contentfulPreviewApi: contentfulPreviewApi || 'https://preview.contentful.com/',
         elasticContentful: elasticContentful || 'http://cms-search.gbif.org:9200/',
+        oozie: oozie || '//c5master1-vh.gbif.org:11000/oozie/v2/',
+        yarnResourceManager: yarnResourceManager || '//c5master2-vh.gbif.org:8088/ws/v1/',
+        elk: elk || '//elk.gbif.org:5601/',
         locales: locales,
         defaultLocale: defaultLocale,
         contentfulLocaleMap: contentfulLocaleMap,
         publicConstantKeys: publicConstantKeys,
-        fbAppId: 1534726343485342
+        fbAppId: 1534726343485342,
+        userAgent: userAgent
     },
     test: {
         env: env,
@@ -175,11 +195,11 @@ var config = {
         log: log,
         serverProtocol: 'http:',
         apidocs: apidocs,
-        dataApiV2: dataApiV2 || '//api.gbif-uat.org/v2/',
+        dataApiV2: dataApiV2 || '//api.gbif.org/v2/',
         dataApi: dataApi || '//api.gbif.org/v1/',
         tileApi: tileApi || '//api.gbif.org/v1/map/density/tile.png',
+        basemapTileApi: basemapTileApi || '//tile.gbif.org',
         identityApi: identityApi || '//labs.gbif-uat.org:7003/',
-        crawlerApi: crawlerApi || '//crawler.gbif.org/',
         analyticsImg: analyticsImg || 'www.gbif.org/sites/default/files/gbif_analytics/',
         domain: 'https://www.gbif-dev.org',
         topDomain: 'gbif-dev.org',
@@ -189,11 +209,15 @@ var config = {
         contentfulApi: contentfulApi || 'https://cdn.contentful.com/',
         contentfulPreviewApi: contentfulPreviewApi || 'https://preview.contentful.com/',
         elasticContentful: elasticContentful || 'http://cms-search.gbif.org:9200/',
+        oozie: oozie || '//c5master1-vh.gbif.org:11000/oozie/v2/',
+        yarnResourceManager: yarnResourceManager || '//c5master2-vh.gbif.org:8088/ws/v1/',
+        elk: elk || '//elk.gbif.org:5601/',
         locales: locales,
         defaultLocale: defaultLocale,
         contentfulLocaleMap: contentfulLocaleMap,
         publicConstantKeys: publicConstantKeys,
-        fbAppId: 1534726343485342
+        fbAppId: 1534726343485342,
+        userAgent: userAgent
     }
 };
 
