@@ -15,6 +15,11 @@ router.get('/country/report/:iso2?', (req, res, next) => {
     }
     let locale = (req.query.locale) ? req.query.locale : 'en';
     try {
+        res.writeHead(200, {
+            'Content-Type': 'application/pdf',
+            'Access-Control-Allow-Origin': '*',
+            'Content-Disposition': 'attachment; filename=GBIF_CountryReport_' + iso2 + '.pdf'
+        });
         reportRunner.runReport(iso2, locale, 2017, res);
     } catch (err) {
         log.error(err);
