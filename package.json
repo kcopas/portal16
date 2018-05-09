@@ -67,6 +67,7 @@
     "express": "^4.16.2",
     "express-jwt": "^5.3.0",
     "fuse.js": "^3.2.0",
+    "gbif-country-reports": "git+https://github.com/gbif/country-reports.git",
     "get-urls": "^5.0.1",
     "glob": "^7.0.3",
     "gulp": "^3.9.0",
