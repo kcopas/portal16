@@ -7040,7 +7040,7 @@
       }
     },
     "gbif-country-reports": {
-      "version": "git+https://github.com/gbif/country-reports.git#bb293508efa4e2178f23db145e92a2f75d25f749",
+      "version": "git+https://github.com/gbif/country-reports.git#6675777150c17185d9f77c04df13c53335fa06a0",
       "requires": {
         "eslint": "4.19.1",
         "eslint-config-google": "0.9.1",

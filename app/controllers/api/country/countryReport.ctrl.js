@@ -20,7 +20,12 @@ router.get('/country/report/:iso2?', (req, res, next) => {
             'Access-Control-Allow-Origin': '*',
             'Content-Disposition': 'attachment; filename=GBIF_CountryReport_' + iso2 + '.pdf'
         });
-        reportRunner.runReport(iso2, locale, 2017, res);
+        reportRunner.runReport({
+            countryCode: iso2,
+            locale: locale,
+            year: req.query.year || 2017,
+            targetStream: res
+           });
     } catch (err) {
         log.error(err);
         res.sendStatus(422);
