@@ -17,8 +17,8 @@ router.get('/country/report/:iso2?', (req, res, next) => {
     try {
         res.writeHead(200, {
             'Content-Type': 'application/pdf',
-            'Access-Control-Allow-Origin': '*',
-            'Content-Disposition': 'attachment; filename=GBIF_CountryReport_' + iso2 + '.pdf'
+            'Access-Control-Allow-Origin': '*'
+           // 'Content-Disposition': 'attachment; filename=GBIF_CountryReport_' + iso2 + '.pdf'
         });
         reportRunner.runReport({
             countryCode: iso2,
