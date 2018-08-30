@@ -13,12 +13,12 @@
 
 ## Getting started
 
-Translations are done using the website [Crowdin](https://crowdin.com/) - so you need an account for that.
+Translations of the user interface on GBIF.org are done using the website [Crowdin](https://crowdin.com/) - so you need an account for that.
 
-1. Have you recieved an invitation email with a link?
+1. Have you received an invitation email with a link?
     * Yes: Then simply follow the link and login/create account.
     * No: go to the [GBIF.org project](https://crowdin.com/project/gbif-portal). Select the language you would like to translate. Press `Join`. We will then add you to the translator team.
-2. Start translating. It is fairly intuitive to get started (see [screenshots](#screenshots-of-the-absolute-basics)), but there is also a [detailed video](https://www.youtube.com/watch?v=bxdC7MfrO7A) that goes into many of the features of the product that you can see if you are curious to optimize your process.
+2. Start translating. It is fairly intuitive to get started (see [screenshots](#screenshots-of-the-absolute-basics)), but there is also a [detailed 41-minute video](https://www.youtube.com/watch?v=bxdC7MfrO7A) that goes into many of the features of the product that you can see if you are curious to optimize your process.
 
 ## How does it work and why Crowdin
 All translations are located in files that could look like this:
@@ -56,9 +56,6 @@ But because it is easy to make mistakes we use a translation tool called Crowdin
 It is of course best if everything is translated, but it is possible to only translate parts of the site, but in some cases it will mean that two adjacent words will be in different languages.
 
 We suggest that you start with:
-
-### Glossary
-To agree on how to translate a e.g. `publisher` it might be a good idea to start out translating the glossary. It won't show anywhere on the website, but estabilsh a base for how to translate going forward. It will also make it trivial to translate these terms in the actual files, as Crowdin will suggest the term from the glossary. During the actual translations you can add terms to the glossary using the `Terms`panel on the right.
 
 ### Components
 1) menu, homepage, profile, feedback, terms, footer, healthSummary
